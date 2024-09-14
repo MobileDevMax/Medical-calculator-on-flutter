@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MedicalCalculatorApp());
+}
+
+class MedicalCalculatorApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Medical calculator',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      home: MedicalCalculatorHomePage(),
+    );
+  }
+}
+
+class MedicalCalculatorHomePage extends StatefulWidget {
+  @override
+  _MedicalCalculatorHomePageState createState() => _MedicalCalculatorHomePageState();
+}
+
+class _MedicalCalculatorHomePageState extends State<MedicalCalculatorHomePage> {
+  final _weightController = TextEditingController();
+  final _concentrationController = TextEditingController();
+  String _result = '';
+
+  void _calculateDosage() {
+    final double? weight = double.tryParse(_weightController.text);
+    final double? concentration = double.tryParse(_concentrationController.text);
+
+    if (weight != null && concentration != null && concentration > 0) {
+      // Formula: Dose (mg) = Weight (kg) × Concentration (mg/kg)
+      final double dosage = weight * concentration;
+      _result = 'The required dose: ${dosage.toStringAsFixed(2)} mg';
+    } else {
+      _result = 'Please enter correct data';
+    }
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Medical calculator'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: _weightController,
+              decoration: InputDecoration(labelText: 'Weight (kg)'),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: _concentrationController,
+              decoration: InputDecoration(labelText: 'Concentration (mg/kg)'),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _calculateDosage,
+              child: Text('Calculate the dose'),
+            ),
+            SizedBox(height: 20),
+            Text(
+              _result,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
